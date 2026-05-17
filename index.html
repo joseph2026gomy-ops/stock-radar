@@ -13,8 +13,6 @@
   --red: #C62828; --red-light: #FFEBEE;
   --green: #2E7D32; --green-light: #E8F5E9;
   --amber: #E65100; --amber-light: #FFF3E0;
-  --purple: #4527A0; --purple-light: #EDE7F6;
-  --teal: #00695C; --teal-light: #E0F2F1;
   --gray: #F5F7FA; --card: #fff;
   --text: #1A1A2E; --text-sub: #666680; --text-hint: #9999AA;
   --border: rgba(0,0,0,0.08); --border-md: rgba(0,0,0,0.14);
@@ -26,18 +24,12 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .header h1 { color: #fff; font-size: 20px; font-weight: 700; }
 .header-sub { color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 3px; }
 
-.token-bar { background: #FFF8E1; border-bottom: 1px solid #FFD54F; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
-.token-bar input { flex: 1; border: 1px solid #FFB74D; border-radius: var(--radius-sm); padding: 7px 10px; font-size: 12px; outline: none; min-width: 0; background: #fff; }
-.token-bar button { background: #E65100; color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 12px; font-size: 12px; cursor: pointer; white-space: nowrap; }
-.token-status { font-size: 11px; padding: 4px 16px 0; color: var(--text-hint); }
-.token-status.ok { color: var(--green); }
-.token-status.err { color: var(--red); }
-
 .search-section { padding: 14px 16px; }
 .search-row { display: flex; gap: 8px; }
 .search-input { flex: 1; border: 1.5px solid var(--border-md); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 16px; outline: none; background: var(--card); transition: border-color 0.2s; }
 .search-input:focus { border-color: var(--blue); }
 .search-btn { background: var(--blue); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 18px; font-size: 15px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+.search-btn:active { background: var(--blue-dark); }
 .search-hint { font-size: 12px; color: var(--text-hint); margin-top: 6px; }
 
 .watchlist-section { padding: 0 16px 14px; }
@@ -52,7 +44,6 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 
 .result-section { padding: 0 16px 100px; }
 
-/* 股票基本 */
 .stock-header-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 10px; }
 .stock-title-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
 .stock-id { font-size: 18px; font-weight: 700; }
@@ -68,7 +59,6 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .price-change.dn { color: var(--green); }
 .price-detail { font-size: 12px; color: var(--text-hint); margin-top: 4px; }
 
-/* 判斷結論 */
 .verdict-card { border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
 .verdict-card.buy { background: var(--green-light); border: 1px solid rgba(46,125,50,0.2); }
 .verdict-card.watch { background: var(--amber-light); border: 1px solid rgba(230,81,0,0.2); }
@@ -80,7 +70,6 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .verdict-card.avoid h3 { color: var(--red); }
 .verdict-text p { font-size: 12px; color: var(--text-sub); margin-top: 3px; line-height: 1.5; }
 
-/* 指標格 */
 .indicators-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
 .ind-card { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--border); padding: 12px; }
 .ind-label { font-size: 11px; color: var(--text-hint); margin-bottom: 4px; }
@@ -93,11 +82,9 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .ind-signal.warn { color: var(--amber); }
 .ind-signal.neu { color: var(--text-hint); }
 
-/* 區塊卡片 */
 .block-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 14px; margin-bottom: 10px; }
 .block-title { font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-/* 三大法人 */
 .chip-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
 .chip-row:last-child { border-bottom: none; }
 .chip-name { font-size: 13px; }
@@ -106,16 +93,12 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .chip-net.dn { color: var(--green); }
 .chip-net.neu { color: var(--text-hint); }
 
-/* 融資融券 */
 .margin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .margin-item { background: var(--gray); border-radius: var(--radius-sm); padding: 10px 12px; }
 .margin-label { font-size: 11px; color: var(--text-hint); margin-bottom: 3px; }
 .margin-val { font-size: 16px; font-weight: 600; }
-.margin-val.up { color: var(--red); }
-.margin-val.dn { color: var(--green); }
 .margin-change { font-size: 11px; margin-top: 2px; color: var(--text-hint); }
 
-/* 走勢 */
 .history-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
 .history-row:last-child { border-bottom: none; }
 .history-date { color: var(--text-hint); font-size: 12px; }
@@ -123,16 +106,14 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .history-chg.up { color: var(--red); }
 .history-chg.dn { color: var(--green); }
 
-/* 新聞 */
 .news-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
 .news-item:last-child { border-bottom: none; }
 .news-title { font-size: 14px; font-weight: 500; color: var(--blue); line-height: 1.4; text-decoration: none; display: block; margin-bottom: 5px; }
 .news-title:hover { text-decoration: underline; }
-.news-meta { font-size: 11px; color: var(--text-hint); display: flex; align-items: center; gap: 8px; }
+.news-meta { font-size: 11px; color: var(--text-hint); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .news-source { background: var(--blue-light); color: var(--blue); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; }
 .news-loading { font-size: 13px; color: var(--text-hint); text-align: center; padding: 16px 0; }
 
-/* 狀態 */
 .state-box { text-align: center; padding: 50px 20px; color: var(--text-hint); }
 .state-box.err { color: var(--red); }
 .state-box p { font-size: 14px; line-height: 1.7; white-space: pre-line; }
@@ -149,12 +130,6 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
   <h1>📡 台股選股雷達</h1>
   <div class="header-sub">GoMy 短線選股工具 · 單股分析版</div>
 </div>
-
-<div class="token-bar">
-  <input type="password" id="token-input" placeholder="🔑 貼上 FinMind Token" />
-  <button onclick="saveToken()">儲存</button>
-</div>
-<div class="token-status" id="token-status">尚未設定 Token</div>
 
 <div class="search-section">
   <div class="search-row">
@@ -182,32 +157,11 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 <div class="bottom-note">資料來源：FinMind + Google News｜<strong>GoMy 選股雷達</strong></div>
 
 <script>
-let currentToken = '';
 let watchlist = JSON.parse(localStorage.getItem('gomy_watchlist') || '[]');
 let stockInfoCache = null;
 
-window.onload = function() {
-  const saved = localStorage.getItem('finmind_token');
-  if (saved) { currentToken = saved; document.getElementById('token-input').value = saved; setStatus('✅ Token 已載入', 'ok'); }
-  renderWatchlist();
-};
+window.onload = function() { renderWatchlist(); };
 
-function saveToken() {
-  const t = document.getElementById('token-input').value.trim();
-  if (!t || t.length < 20) { setStatus('❌ Token 格式不正確', 'err'); return; }
-  localStorage.setItem('finmind_token', t);
-  currentToken = t;
-  stockInfoCache = null;
-  setStatus('✅ Token 已儲存', 'ok');
-}
-
-function setStatus(msg, cls) {
-  const el = document.getElementById('token-status');
-  el.textContent = msg;
-  el.className = 'token-status' + (cls ? ' ' + cls : '');
-}
-
-// 自選股
 function renderWatchlist() {
   const el = document.getElementById('watchlist-chips');
   if (!watchlist.length) { el.innerHTML = '<div class="watchlist-empty">尚無自選股，查詢後按「加入自選股」</div>'; return; }
@@ -256,11 +210,9 @@ function toggleWatch(id, name) {
   }
 }
 
-// 主查詢
 async function queryStock() {
   const id = document.getElementById('stock-input').value.trim().replace(/\D/g, '');
   if (!id) { showState('請輸入股票代碼'); return; }
-  if (!currentToken) { showState('請先設定 FinMind Token', true); return; }
 
   showLoading('正在查詢 ' + id + ' 的資料...');
 
@@ -281,11 +233,7 @@ async function queryStock() {
     }
 
     const stockName = infoRes ? infoRes.stock_name : (priceRes[0]?.stock_name || '');
-
-    // 先渲染主內容，新聞另外非同步載入
     renderResult(id, priceRes, chipRes || [], marginRes || [], infoRes, stockName);
-
-    // 新聞非同步載入（不擋主畫面）
     loadNews(id, stockName);
 
   } catch(e) {
@@ -294,7 +242,7 @@ async function queryStock() {
 }
 
 async function fetchAPI(type, stock_id, start_date, end_date) {
-  const params = new URLSearchParams({ type, stock_id, start_date, end_date, token: currentToken });
+  const params = new URLSearchParams({ type, stock_id, start_date, end_date });
   const res = await fetch('/api/stock?' + params.toString());
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const json = await res.json();
@@ -306,7 +254,7 @@ async function fetchAPI(type, stock_id, start_date, end_date) {
 async function fetchStockInfo(stock_id) {
   if (stockInfoCache) return stockInfoCache.find(s => s.stock_id === stock_id) || null;
   try {
-    const params = new URLSearchParams({ type: 'info', stock_id, start_date: '2020-01-01', end_date: '2020-01-01', token: currentToken });
+    const params = new URLSearchParams({ type: 'info', stock_id, start_date: '2020-01-01', end_date: '2020-01-01' });
     const res = await fetch('/api/stock?' + params.toString());
     const json = await res.json();
     if (json.data) { stockInfoCache = json.data; return json.data.find(s => s.stock_id === stock_id) || null; }
@@ -318,18 +266,12 @@ async function loadNews(stock_id, stock_name) {
   const newsEl = document.getElementById('news-block');
   if (!newsEl) return;
   newsEl.innerHTML = '<div class="news-loading">🔍 正在搜尋相關新聞...</div>';
-
   try {
     const params = new URLSearchParams({ type: 'news', stock_id, stock_name: stock_name || stock_id });
     const res = await fetch('/api/stock?' + params.toString());
     const json = await res.json();
     const items = json.data || [];
-
-    if (!items.length) {
-      newsEl.innerHTML = '<div class="news-loading">目前無相關新聞</div>';
-      return;
-    }
-
+    if (!items.length) { newsEl.innerHTML = '<div class="news-loading">目前無相關新聞</div>'; return; }
     newsEl.innerHTML = items.map(item => {
       const date = item.pubDate ? formatNewsDate(item.pubDate) : '';
       return `<div class="news-item">
@@ -340,17 +282,13 @@ async function loadNews(stock_id, stock_name) {
         </div>
       </div>`;
     }).join('');
-
-  } catch(e) {
-    newsEl.innerHTML = '<div class="news-loading">新聞載入失敗</div>';
-  }
+  } catch(e) { newsEl.innerHTML = '<div class="news-loading">新聞載入失敗</div>'; }
 }
 
 function formatNewsDate(pubDate) {
   try {
     const d = new Date(pubDate);
-    const now = new Date();
-    const diff = Math.floor((now - d) / 1000 / 60); // 分鐘
+    const diff = Math.floor((new Date() - d) / 60000);
     if (diff < 60) return diff + ' 分鐘前';
     if (diff < 1440) return Math.floor(diff/60) + ' 小時前';
     if (diff < 10080) return Math.floor(diff/1440) + ' 天前';
@@ -358,7 +296,6 @@ function formatNewsDate(pubDate) {
   } catch(e) { return pubDate; }
 }
 
-// 技術指標計算
 function getChangePct(s) {
   const close = parseFloat(s.close), spread = parseFloat(s.spread);
   if (!close || close === spread) return 0;
@@ -393,7 +330,6 @@ function calcMA(closes, period) {
   return Math.round(closes.slice(-period).reduce((a,b) => a+b, 0) / period * 100) / 100;
 }
 
-// 渲染
 function renderResult(id, priceData, chipData, marginData, stockInfo, stockName) {
   const sorted = priceData.sort((a,b) => a.date.localeCompare(b.date));
   const latest = sorted[sorted.length-1];
@@ -429,7 +365,6 @@ function renderResult(id, priceData, chipData, marginData, stockInfo, stockName)
   if (pct >= 3) { buyScore += 1; signals.push('今日強勢大漲'); }
   else if (pct <= -3) { buyScore -= 1; signals.push('今日跌幅偏大'); }
 
-  // 三大法人
   const latestChipDate = chipData.length ? chipData.reduce((a,b) => a.date > b.date ? a : b).date : null;
   const latestChip = latestChipDate ? chipData.filter(d => d.date === latestChipDate) : [];
   const foreign = latestChip.find(d => d.name && d.name.includes('外陸資')) || latestChip.find(d => d.name && d.name.includes('外'));
@@ -555,30 +490,15 @@ function renderInd(label, value, cls, signal) {
   </div>`;
 }
 
-function fmtVol(v) {
-  const n = parseFloat(v);
-  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
-  if (n >= 1000) return (n/1000).toFixed(0)+'K';
-  return String(Math.round(n));
-}
-function fmtChip(v) {
-  const n = parseInt(v)||0;
-  if (Math.abs(n) >= 1000) return (n/1000).toFixed(0)+'K';
-  return String(n);
-}
-function fmtN(v) {
-  const n = parseInt(v)||0;
-  if (n >= 10000) return (n/1000).toFixed(0)+'K';
-  return String(n);
-}
+function fmtVol(v) { const n=parseFloat(v); if(n>=1000000) return (n/1000000).toFixed(1)+'M'; if(n>=1000) return (n/1000).toFixed(0)+'K'; return String(Math.round(n)); }
+function fmtChip(v) { const n=parseInt(v)||0; if(Math.abs(n)>=1000) return (n/1000).toFixed(0)+'K'; return String(n); }
+function fmtN(v) { const n=parseInt(v)||0; if(n>=10000) return (n/1000).toFixed(0)+'K'; return String(n); }
 
 function showLoading(msg) {
-  document.getElementById('result-section').innerHTML =
-    `<div class="state-box"><div class="spinner"></div><p>${msg}</p></div>`;
+  document.getElementById('result-section').innerHTML = `<div class="state-box"><div class="spinner"></div><p>${msg}</p></div>`;
 }
 function showState(msg, isErr) {
-  document.getElementById('result-section').innerHTML =
-    `<div class="state-box${isErr?' err':''}"><p style="font-size:24px;margin-bottom:10px">${isErr?'⚠️':'💡'}</p><p>${msg}</p></div>`;
+  document.getElementById('result-section').innerHTML = `<div class="state-box${isErr?' err':''}"><p style="font-size:24px;margin-bottom:10px">${isErr?'⚠️':'💡'}</p><p>${msg}</p></div>`;
 }
 
 function getTaiwanDate() {
