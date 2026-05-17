@@ -42,6 +42,68 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .chip .del:hover { color: var(--red); }
 .watchlist-empty { font-size: 13px; color: var(--text-hint); }
 
+/* 批次掃描 */
+.scan-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.scan-btn:active { background: var(--blue-dark); }
+.scan-btn:disabled { background: var(--text-hint); cursor: not-allowed; }
+
+.scan-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 8px; }
+.scan-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.scan-close-btn { background: none; border: none; color: var(--text-hint); font-size: 14px; cursor: pointer; padding: 4px 8px; }
+
+.scan-progress { padding: 0 16px 12px; }
+.scan-progress-bar { height: 6px; background: var(--border-md); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+.scan-progress-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.3s; width: 0%; }
+.scan-progress-text { font-size: 12px; color: var(--text-hint); text-align: center; }
+
+.scan-group { padding: 0 16px 10px; }
+.scan-group-title { font-size: 12px; font-weight: 600; padding: 8px 0 6px; display: flex; align-items: center; gap: 6px; }
+.scan-group-title.buy { color: var(--green); }
+.scan-group-title.watch { color: var(--amber); }
+.scan-group-title.avoid { color: var(--red); }
+
+.scan-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.scan-card:active { transform: scale(0.98); }
+.scan-card.buy { border-left: 3px solid var(--green); }
+.scan-card.watch { border-left: 3px solid var(--amber); }
+.scan-card.avoid { border-left: 3px solid var(--red); }
+.scan-stock-name { font-size: 14px; font-weight: 600; }
+.scan-stock-sub { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
+.scan-verdict { font-size: 12px; font-weight: 500; }
+.scan-verdict.buy { color: var(--green); }
+.scan-verdict.watch { color: var(--amber); }
+.scan-verdict.avoid { color: var(--red); }
+.scan-price { font-size: 14px; font-weight: 600; text-align: right; }
+.scan-price.up { color: var(--red); }
+.scan-price.dn { color: var(--green); }
+.scan-change { font-size: 11px; margin-top: 2px; text-align: right; }
+.scan-change.up { color: var(--red); }
+.scan-change.dn { color: var(--green); }
+.scan-empty { font-size: 13px; color: var(--text-hint); text-align: center; padding: 16px 0; }
+
 .result-section { padding: 0 16px 120px; }
 
 .stock-header-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 10px; }
@@ -285,6 +347,20 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
   <div class="watchlist-chips" id="watchlist-chips">
     <div class="watchlist-empty">尚無自選股，查詢後按「加入自選股」</div>
   </div>
+  <button class="scan-btn" id="scan-btn" onclick="startScan()">🔍 批次掃描自選股</button>
+</div>
+
+<!-- 掃描結果 -->
+<div id="scan-section" style="display:none">
+  <div class="scan-header">
+    <div class="scan-title">📊 自選股掃描結果</div>
+    <button class="scan-close-btn" onclick="closeScan()">✕ 關閉</button>
+  </div>
+  <div id="scan-progress" class="scan-progress" style="display:none">
+    <div class="scan-progress-bar"><div class="scan-progress-fill" id="scan-fill"></div></div>
+    <div class="scan-progress-text" id="scan-progress-text">準備掃描...</div>
+  </div>
+  <div id="scan-result"></div>
 </div>
 
 <div class="result-section" id="result-section">
@@ -992,6 +1068,177 @@ function showLoading(msg) {
 }
 function showState(msg, isErr) {
   document.getElementById('result-section').innerHTML = `<div class="state-box${isErr?' err':''}"><p style="font-size:24px;margin-bottom:10px">${isErr?'⚠️':'💡'}</p><p>${msg}</p></div>`;
+}
+
+// ============================
+// 批次掃描
+// ============================
+async function startScan() {
+  if (!watchlist.length) {
+    alert('請先加入自選股，再進行批次掃描！');
+    return;
+  }
+
+  const scanSection = document.getElementById('scan-section');
+  const scanProgress = document.getElementById('scan-progress');
+  const scanResult = document.getElementById('scan-result');
+  const scanBtn = document.getElementById('scan-btn');
+  const scanFill = document.getElementById('scan-fill');
+  const scanText = document.getElementById('scan-progress-text');
+
+  scanSection.style.display = 'block';
+  scanProgress.style.display = 'block';
+  scanResult.innerHTML = '';
+  scanBtn.disabled = true;
+  scanBtn.textContent = '⏳ 掃描中...';
+
+  // 滾動到掃描區塊
+  scanSection.scrollIntoView({ behavior: 'smooth' });
+
+  const results = [];
+  const total = watchlist.length;
+
+  for (let i = 0; i < total; i++) {
+    const stock = watchlist[i];
+    scanText.textContent = `正在查詢 ${stock.id} ${stock.name}（${i+1}/${total}）`;
+    scanFill.style.width = ((i / total) * 100) + '%';
+
+    try {
+      const endDate = getTaiwanDate();
+      const startDate = getDateBefore(endDate, 20);
+      const chipStart = getDateBefore(endDate, 5);
+
+      const [priceRes, chipRes] = await Promise.all([
+        fetchAPI('price', stock.id, startDate, endDate),
+        fetchAPI('chip', stock.id, chipStart, endDate)
+      ]);
+
+      if (!priceRes || priceRes.length === 0) continue;
+
+      const sorted = priceRes.sort((a,b) => a.date.localeCompare(b.date));
+      const latest = sorted[sorted.length - 1];
+      const closes = sorted.map(d => parseFloat(d.close));
+      const spread = parseFloat(latest.spread);
+      const pct = getChangePct(latest);
+      const close = parseFloat(latest.close);
+
+      // 計算指標
+      const rsi = calcRSI(closes, Math.min(14, closes.length-1));
+      const kd = calcKD(sorted, Math.min(9, sorted.length));
+      const ma5 = calcMA(closes, Math.min(5, closes.length));
+      const ma10 = calcMA(closes, Math.min(10, closes.length));
+
+      // 三大法人
+      const latestChipDate = chipRes.length ? chipRes.reduce((a,b) => a.date > b.date ? a : b).date : null;
+      const latestChip = latestChipDate ? chipRes.filter(d => d.date === latestChipDate) : [];
+      const foreign = latestChip.find(d => d.name && d.name.includes('外陸資')) || latestChip.find(d => d.name && d.name.includes('外'));
+      const foreignNet = !foreign ? 0 : (parseInt(foreign.buy)||0) - (parseInt(foreign.sell)||0);
+
+      // 評分
+      let buyScore = 0;
+      if (rsi !== null) {
+        if (rsi < 30) buyScore += 2;
+        else if (rsi < 50) buyScore += 1;
+        else if (rsi > 80) buyScore -= 1;
+      }
+      if (kd.k !== null) {
+        if (kd.k < 20) buyScore += 2;
+        else if (kd.k > kd.d && kd.k < 80) buyScore += 1;
+        else if (kd.k > 80) buyScore -= 1;
+      }
+      if (ma5 && ma10) {
+        if (close > ma5 && close > ma10) buyScore += 1;
+        else if (close < ma5 && close < ma10) buyScore -= 1;
+      }
+      if (close > parseFloat(latest.open)) buyScore += 1;
+      if (pct >= 3) buyScore += 1;
+      else if (pct <= -3) buyScore -= 1;
+      if (foreignNet > 0) buyScore += 1;
+      else if (foreignNet < 0) buyScore -= 1;
+
+      let verdict, verdictClass;
+      if (buyScore >= 3) { verdict = '✅ 建議買進'; verdictClass = 'buy'; }
+      else if (buyScore >= 1) { verdict = '👀 可以觀察'; verdictClass = 'watch'; }
+      else { verdict = '⏸️ 暫時觀望'; verdictClass = 'avoid'; }
+
+      results.push({
+        id: stock.id,
+        name: stock.name,
+        close: close.toFixed(2),
+        spread: spread.toFixed(2),
+        pct: pct.toFixed(2),
+        isUp: spread >= 0,
+        verdict,
+        verdictClass,
+        buyScore
+      });
+
+    } catch(e) {
+      // 查詢失敗跳過
+    }
+
+    // 每次查詢之間稍微等一下，避免 API 限流
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  // 掃描完成
+  scanFill.style.width = '100%';
+  scanText.textContent = `掃描完成！共 ${results.length} 檔`;
+  scanBtn.disabled = false;
+  scanBtn.textContent = '🔍 批次掃描自選股';
+
+  renderScanResult(results);
+}
+
+function renderScanResult(results) {
+  const scanResult = document.getElementById('scan-result');
+  if (!results.length) {
+    scanResult.innerHTML = '<div class="scan-empty">無法取得資料，請確認自選股設定</div>';
+    return;
+  }
+
+  const groups = { buy: [], watch: [], avoid: [] };
+  results.forEach(r => groups[r.verdictClass].push(r));
+
+  const groupConfig = [
+    { key: 'buy', label: '✅ 建議買進', count: groups.buy.length },
+    { key: 'watch', label: '👀 可以觀察', count: groups.watch.length },
+    { key: 'avoid', label: '⏸️ 暫時觀望', count: groups.avoid.length },
+  ];
+
+  let html = '';
+  groupConfig.forEach(({ key, label, count }) => {
+    if (!groups[key].length) return;
+    html += `<div class="scan-group">
+      <div class="scan-group-title ${key}">${label}（${count} 檔）</div>`;
+    groups[key].forEach(r => {
+      html += `<div class="scan-card ${key}" onclick="goToStock('${r.id}')">
+        <div>
+          <div class="scan-stock-name">${r.id} ${r.name}</div>
+          <div class="scan-verdict ${key}">${r.verdict}</div>
+        </div>
+        <div>
+          <div class="scan-price ${r.isUp?'up':'dn'}">${r.close}</div>
+          <div class="scan-change ${r.isUp?'up':'dn'}">${r.isUp?'+':''}${r.spread} (${r.isUp?'+':''}${r.pct}%)</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  scanResult.innerHTML = html;
+}
+
+function goToStock(id) {
+  // 跳回查詢，填入股票代號並查詢
+  document.getElementById('stock-input').value = id;
+  document.getElementById('scan-section').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  queryStock();
+}
+
+function closeScan() {
+  document.getElementById('scan-section').style.display = 'none';
 }
 
 function getTaiwanDate() {
