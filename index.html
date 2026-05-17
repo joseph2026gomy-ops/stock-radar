@@ -122,13 +122,14 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 /* 財報卡片拉寬：突破父容器，延伸到螢幕邊緣 */
 .fin-wide-card {
   background: var(--card);
-  border-radius: var(--radius);
-  border: 0.5px solid var(--border);
-  padding: 14px;
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 14px 16px;
   margin-bottom: 10px;
-  margin-left: -16px;
-  margin-right: -16px;
-  border-radius: 0;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  max-width: 100vw;
 }
 
 .fin-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
@@ -473,6 +474,8 @@ async function loadNews(stock_id, stock_name) {
     const json = await res.json();
     const items = json.data || [];
     if (!items.length) { newsEl.innerHTML = '<div class="news-loading">目前無相關新聞</div>'; return; }
+    // 依日期排序，最新的在最上面
+    items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     newsEl.innerHTML = items.map(item => {
       const date = item.pubDate ? formatNewsDate(item.pubDate) : '';
       return `<div class="news-item">
@@ -808,6 +811,8 @@ const FIN_NAMES = {
   'TotalNonoperatingIncomeAndExpense': '業外收支合計',
   'IncomeAfterTaxes': '稅後淨利',
   'IncomeBeforeTax': '稅前淨利',
+  'PreTaxIncome': '稅前淨利',
+  'NetIncomeBeforeTax': '稅前淨利',
   'TAX': '所得稅費用',
   'NetIncome': '本期淨利',
   'EPS': '每股盈餘(元)',
@@ -818,35 +823,62 @@ const FIN_NAMES = {
   'NoncontrollingInterests': '非控制權益損益',
   'OtherComprehensiveIncome': '其他綜合損益',
   'OTHNOE': '其他非營業損益',
+  'ComprehensiveIncomeConsolidatedNetIncomeAttributedNonControllingInterest': '非控制權益綜合損益',
+  'IncomeFromContinuingOperations': '繼續營業單位損益',
   // 現金流量表
-  'OperatingActivities': '營業活動現金流量',
-  'InvestingActivities': '投資活動現金流量',
-  'FinancingActivities': '融資活動現金流量',
-  'CashAndCashEquivalents': '期末現金及約當現金',
+  'CashFlowsFromOperatingActivities': '營業活動現金流量',
+  'CashProvidedByInvestingActivities': '投資活動現金流量',
+  'OtherInvestingActivities': '其他投資活動',
+  'CashBalancesBeginningOfPeriod': '期初現金餘額',
+  'CashBalancesEndOfPeriod': '期末現金餘額',
+  'CashBalancesIncrease': '現金淨增減',
+  'PropertyAndPlantAndEquipment': '購置不動產廠房設備',
+  'HedgingFinancialLiabilities': '避險金融負債',
+  'RedemptionOfBonds': '償還公司債',
+  'IncomeBeforeIncomeTaxFromContinuingOperations': '繼續營業稅前淨利',
+  'RentalPrincipalRepayments': '租賃負債本金償還',
+  'NetIncomeBeforeTax': '稅前淨利',
+  'Depreciation': '折舊及攤銷',
+  'AmortizationExpense': '攤銷費用',
+  'AccountsPayable': '應付帳款',
+  'CapitalExpenditure': '資本支出',
   'NetCashProvidedByOperatingActivities': '營業活動淨現金',
   'NetCashUsedInInvestingActivities': '投資活動淨現金',
   'NetCashProvidedByFinancingActivities': '融資活動淨現金',
   'EffectOfExchangeRateChanges': '匯率變動影響',
   'NetIncreaseInCashAndCashEquivalents': '現金淨增減',
-  'Depreciation': '折舊及攤銷',
-  'CapitalExpenditure': '資本支出',
   // 資產負債表
   'TotalAssets': '總資產',
   'TotalLiabilities': '總負債',
   'TotalEquity': '股東權益合計',
-  'CashAndCashEquivalentsBalance': '現金及約當現金',
+  'CashAndCashEquivalents': '現金及約當現金',
+  'CashAndCashEquivalents_per': '每股現金(元)',
+  'CurrentFinancialAssetsAtFairValueThroughProfitOrLoss': '流動-透過損益衡量金融資產',
+  'CurrentFinancialAssetsAtFairValueThroughProfitOrLoss_per': '流動-透過損益衡量金融資產(每股)',
+  'NonCurrentFinancialAssetsAtFairValueThroughProfitOrLoss': '非流動-透過損益衡量金融資產',
+  'NonCurrentFinancialAssetsAtFairValueThroughProfitOrLoss_per': '非流動-透過損益衡量金融資產(每股)',
+  'FinancialAssetsAtFairValueThroughOtherComprehensiveIncome': '透過其他綜合損益金融資產(流動)',
+  'FinancialAssetsAtFairValueThroughOtherComprehensiveIncome_per': '透過其他綜合損益金融資產(每股)',
+  'FinancialAssetsAtFairValueThroughOtherComprehensiveIncomeNonCurrent': '透過其他綜合損益金融資產(非流動)',
+  'FinancialAssetsAtFairValueThroughOtherComprehensiveIncomeNonCurrent_per': '透過其他綜合損益金融資產非流動(每股)',
+  'FinancialAssetsAtAmortizedCost': '按攤銷後成本衡量金融資產(流動)',
+  'FinancialAssetsAtAmortizedCost_per': '按攤銷後成本衡量金融資產(每股)',
+  'FinancialAssetsAtAmortizedCostNonCurrent': '按攤銷後成本衡量金融資產(非流動)',
+  'FinancialAssetsAtAmortizedCostNonCurrent_per': '按攤銷後成本衡量金融資產非流動(每股)',
+  'HedgingAinancialAssets': '避險金融資產',
   'ShortTermInvestment': '短期投資',
   'AccountsReceivable': '應收帳款',
   'Inventories': '存貨',
   'CurrentAssets': '流動資產合計',
   'NonCurrentAssets': '非流動資產合計',
-  'PropertyAndEquipment': '不動產廠房設備',
+  'PropertyAndEquipment': '不動產廠房設備淨額',
   'CurrentLiabilities': '流動負債合計',
   'NonCurrentLiabilities': '非流動負債合計',
   'LongTermDebt': '長期借款',
   'RetainedEarnings': '保留盈餘',
   'CommonStock': '普通股股本',
   'BookValuePerShare': '每股淨值(元)',
+  'CashAndCashEquivalentsBalance': '現金及約當現金餘額',
 };
 
 function translateFinName(name) {
