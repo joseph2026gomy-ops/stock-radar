@@ -118,10 +118,23 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .fin-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border-md); }
 .fin-tab { padding: 8px 14px; font-size: 13px; color: var(--text-hint); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
 .fin-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+
+/* 財報卡片拉寬：突破父容器，延伸到螢幕邊緣 */
+.fin-wide-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  padding: 14px;
+  margin-bottom: 10px;
+  margin-left: -16px;
+  margin-right: -16px;
+  border-radius: 0;
+}
+
 .fin-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
-.fin-table th { text-align: left; color: var(--text-hint); font-weight: 500; padding: 6px 4px; border-bottom: 1px solid var(--border-md); line-height: 1.4; }
+.fin-table th { text-align: left; color: var(--text-hint); font-weight: 500; padding: 6px 6px; border-bottom: 1px solid var(--border-md); line-height: 1.4; }
 .fin-table th:not(:first-child) { text-align: right; }
-.fin-table td { padding: 8px 4px; border-bottom: 0.5px solid var(--border); vertical-align: middle; word-break: keep-all; }
+.fin-table td { padding: 8px 6px; border-bottom: 0.5px solid var(--border); vertical-align: middle; word-break: keep-all; }
 .fin-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .fin-table tr:last-child td { border-bottom: none; }
 .fin-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
@@ -669,7 +682,7 @@ function renderResult(id, priceData, chipData, marginData, stockInfo, stockName)
       <div id="news-block"><div class="news-loading">🔍 正在搜尋相關新聞...</div></div>
     </div>
 
-    <div class="block-card">
+    <div class="fin-wide-card">
       <div class="block-title">📊 財務報表（近4季）</div>
       <div class="fin-tabs">
         <div class="fin-tab active" onclick="switchFinTab('financial',this)">損益表</div>
@@ -752,8 +765,8 @@ function renderFinancial(data, type) {
   }
 
   let html = '<table class="fin-table"><thead><tr>';
-  html += '<th style="width:55%">項目</th>';
-  allDates.forEach(d => { html += `<th style="width:${45/allDates.length}%">${fmtQuarter(d)}</th>`; });
+  html += '<th style="width:45%">項目</th>';
+  allDates.forEach(d => { html += `<th style="width:${55/allDates.length}%">${fmtQuarter(d)}</th>`; });
   html += '</tr></thead><tbody>';
 
   allTypes.forEach(typeName => {
