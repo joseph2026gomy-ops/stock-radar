@@ -118,14 +118,15 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .fin-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border-md); }
 .fin-tab { padding: 8px 14px; font-size: 13px; color: var(--text-hint); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
 .fin-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
-.fin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.fin-table th { text-align: left; color: var(--text-hint); font-weight: 500; padding: 6px 4px; border-bottom: 0.5px solid var(--border-md); }
+.fin-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+.fin-table th { text-align: left; color: var(--text-hint); font-weight: 500; padding: 6px 4px; border-bottom: 1px solid var(--border-md); line-height: 1.4; }
 .fin-table th:not(:first-child) { text-align: right; }
-.fin-table td { padding: 7px 4px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
-.fin-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.fin-table td { padding: 8px 4px; border-bottom: 0.5px solid var(--border); vertical-align: middle; word-break: keep-all; }
+.fin-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .fin-table tr:last-child td { border-bottom: none; }
-.fin-item-name { color: var(--text); font-size: 12px; line-height: 1.4; }
-.fin-val { color: var(--text); }
+.fin-table tr:nth-child(even) td { background: rgba(0,0,0,0.015); }
+.fin-item-name { color: var(--text); font-size: 12px; line-height: 1.5; }
+.fin-val { color: var(--text); font-size: 12px; }
 .fin-val.up { color: var(--red); }
 .fin-val.dn { color: var(--green); }
 .fin-loading { font-size: 13px; color: var(--text-hint); text-align: center; padding: 20px 0; }
@@ -742,15 +743,23 @@ function renderFinancial(data, type) {
   // 取得所有項目
   const allTypes = [...new Set(data.map(d => d.type))];
 
-  // 建立表格：行=項目，欄=季度
-  let html = '<div style="overflow-x:auto"><table class="fin-table"><thead><tr>';
-  html += '<th style="min-width:120px">項目</th>';
-  allDates.forEach(d => { html += `<th>${d.substring(0,7)}</th>`; });
+  // 格式化季度標題
+  function fmtQuarter(dateStr) {
+    const y = dateStr.substring(0,4);
+    const m = parseInt(dateStr.substring(5,7));
+    const q = m <= 3 ? 'Q1' : m <= 6 ? 'Q2' : m <= 9 ? 'Q3' : 'Q4';
+    return y + '<br>' + q;
+  }
+
+  let html = '<table class="fin-table"><thead><tr>';
+  html += '<th style="width:55%">項目</th>';
+  allDates.forEach(d => { html += `<th style="width:${45/allDates.length}%">${fmtQuarter(d)}</th>`; });
   html += '</tr></thead><tbody>';
 
   allTypes.forEach(typeName => {
+    const chName = translateFinName(typeName);
     html += '<tr>';
-    html += `<td class="fin-item-name">${typeName}</td>`;
+    html += `<td class="fin-item-name">${chName}</td>`;
     allDates.forEach(d => {
       const item = data.find(x => x.date === d && x.type === typeName);
       const val = item ? parseFloat(item.value) : null;
@@ -765,7 +774,7 @@ function renderFinancial(data, type) {
     html += '</tr>';
   });
 
-  html += '</tbody></table></div>';
+  html += '</tbody></table>';
   finEl.innerHTML = html;
 }
 
@@ -775,6 +784,60 @@ function fmtFinVal(v) {
   if (abs >= 100000000) return sign + (abs/100000000).toFixed(2) + '億';
   if (abs >= 10000) return sign + (abs/10000).toFixed(1) + '萬';
   return sign + abs.toFixed(2);
+}
+
+// 財報項目中文對照表
+const FIN_NAMES = {
+  // 損益表
+  'Revenue': '營業收入',
+  'GrossProfit': '營業毛利',
+  'OperatingIncome': '營業利益',
+  'TotalNonoperatingIncomeAndExpense': '業外收支合計',
+  'IncomeAfterTaxes': '稅後淨利',
+  'IncomeBeforeTax': '稅前淨利',
+  'TAX': '所得稅費用',
+  'NetIncome': '本期淨利',
+  'EPS': '每股盈餘(元)',
+  'CostOfGoodsSold': '營業成本',
+  'OperatingExpenses': '營業費用',
+  'TotalConsolidatedProfitForThePeriod': '本期綜合損益總額',
+  'EquityAttributableToOwnersOfParent': '歸屬母公司業主損益',
+  'NoncontrollingInterests': '非控制權益損益',
+  'OtherComprehensiveIncome': '其他綜合損益',
+  'OTHNOE': '其他非營業損益',
+  // 現金流量表
+  'OperatingActivities': '營業活動現金流量',
+  'InvestingActivities': '投資活動現金流量',
+  'FinancingActivities': '融資活動現金流量',
+  'CashAndCashEquivalents': '期末現金及約當現金',
+  'NetCashProvidedByOperatingActivities': '營業活動淨現金',
+  'NetCashUsedInInvestingActivities': '投資活動淨現金',
+  'NetCashProvidedByFinancingActivities': '融資活動淨現金',
+  'EffectOfExchangeRateChanges': '匯率變動影響',
+  'NetIncreaseInCashAndCashEquivalents': '現金淨增減',
+  'Depreciation': '折舊及攤銷',
+  'CapitalExpenditure': '資本支出',
+  // 資產負債表
+  'TotalAssets': '總資產',
+  'TotalLiabilities': '總負債',
+  'TotalEquity': '股東權益合計',
+  'CashAndCashEquivalentsBalance': '現金及約當現金',
+  'ShortTermInvestment': '短期投資',
+  'AccountsReceivable': '應收帳款',
+  'Inventories': '存貨',
+  'CurrentAssets': '流動資產合計',
+  'NonCurrentAssets': '非流動資產合計',
+  'PropertyAndEquipment': '不動產廠房設備',
+  'CurrentLiabilities': '流動負債合計',
+  'NonCurrentLiabilities': '非流動負債合計',
+  'LongTermDebt': '長期借款',
+  'RetainedEarnings': '保留盈餘',
+  'CommonStock': '普通股股本',
+  'BookValuePerShare': '每股淨值(元)',
+};
+
+function translateFinName(name) {
+  return FIN_NAMES[name] || name;
 }
 
 function showLoading(msg) {
