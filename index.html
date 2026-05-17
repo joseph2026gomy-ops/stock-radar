@@ -13,6 +13,8 @@
   --red: #C62828; --red-light: #FFEBEE;
   --green: #2E7D32; --green-light: #E8F5E9;
   --amber: #E65100; --amber-light: #FFF3E0;
+  --purple: #4527A0; --purple-light: #EDE7F6;
+  --teal: #00695C; --teal-light: #E0F2F1;
   --gray: #F5F7FA; --card: #fff;
   --text: #1A1A2E; --text-sub: #666680; --text-hint: #9999AA;
   --border: rgba(0,0,0,0.08); --border-md: rgba(0,0,0,0.14);
@@ -20,10 +22,12 @@
 }
 body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--gray); color: var(--text); max-width: 480px; margin: 0 auto; min-height: 100vh; }
 
+/* Header */
 .header { background: linear-gradient(135deg, #0D47A1, #1976D2); padding: 48px 18px 20px; }
 .header h1 { color: #fff; font-size: 20px; font-weight: 700; }
 .header-sub { color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 3px; }
 
+/* Token */
 .token-bar { background: #FFF8E1; border-bottom: 1px solid #FFD54F; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
 .token-bar input { flex: 1; border: 1px solid #FFB74D; border-radius: var(--radius-sm); padding: 7px 10px; font-size: 12px; outline: none; min-width: 0; background: #fff; }
 .token-bar button { background: #E65100; color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 12px; font-size: 12px; cursor: pointer; white-space: nowrap; }
@@ -31,33 +35,35 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .token-status.ok { color: var(--green); }
 .token-status.err { color: var(--red); }
 
+/* 查詢 */
 .search-section { padding: 14px 16px; }
 .search-row { display: flex; gap: 8px; }
-.search-input { flex: 1; border: 1.5px solid var(--border-md); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 16px; outline: none; background: var(--card); color: var(--text); transition: border-color 0.2s; }
+.search-input { flex: 1; border: 1.5px solid var(--border-md); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 16px; outline: none; background: var(--card); transition: border-color 0.2s; }
 .search-input:focus { border-color: var(--blue); }
 .search-btn { background: var(--blue); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 18px; font-size: 15px; cursor: pointer; font-weight: 500; white-space: nowrap; }
-.search-btn:active { background: var(--blue-dark); }
-.search-hint { font-size: 12px; color: var(--text-hint); margin-top: 6px; padding: 0 2px; }
+.search-hint { font-size: 12px; color: var(--text-hint); margin-top: 6px; }
 
+/* 自選股 */
 .watchlist-section { padding: 0 16px 14px; }
-.watchlist-title { font-size: 12px; color: var(--text-hint); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-.watchlist-title span { color: var(--blue); font-size: 11px; cursor: pointer; }
+.watchlist-title { font-size: 12px; color: var(--text-hint); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.watchlist-title span { color: var(--blue); cursor: pointer; font-size: 11px; }
 .watchlist-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.chip { display: flex; align-items: center; gap: 4px; background: var(--card); border: 1px solid var(--border-md); border-radius: 20px; padding: 6px 12px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.chip { display: flex; align-items: center; gap: 4px; background: var(--card); border: 1px solid var(--border-md); border-radius: 20px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
 .chip:hover { border-color: var(--blue); color: var(--blue); }
-.chip .del { color: var(--text-hint); font-size: 15px; margin-left: 2px; line-height: 1; }
+.chip .del { color: var(--text-hint); font-size: 15px; margin-left: 2px; }
 .chip .del:hover { color: var(--red); }
-.watchlist-empty { font-size: 13px; color: var(--text-hint); padding: 4px 2px; }
+.watchlist-empty { font-size: 13px; color: var(--text-hint); }
 
+/* 結果區 */
 .result-section { padding: 0 16px 100px; }
 
+/* 股票基本 */
 .stock-header-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 10px; }
 .stock-title-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
 .stock-id { font-size: 18px; font-weight: 700; }
-.stock-name-tag { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
-.add-btn { background: var(--blue-light); color: var(--blue); border: none; border-radius: 20px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+.stock-meta { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
+.add-btn { background: var(--blue-light); color: var(--blue); border: none; border-radius: 20px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 .add-btn.added { background: var(--green-light); color: var(--green); }
-
 .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
 .big-price { font-size: 32px; font-weight: 700; }
 .big-price.up { color: var(--red); }
@@ -65,8 +71,9 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .price-change { font-size: 15px; font-weight: 500; }
 .price-change.up { color: var(--red); }
 .price-change.dn { color: var(--green); }
-.price-meta { font-size: 12px; color: var(--text-hint); }
+.price-detail { font-size: 12px; color: var(--text-hint); margin-top: 4px; }
 
+/* 判斷結論 */
 .verdict-card { border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
 .verdict-card.buy { background: var(--green-light); border: 1px solid rgba(46,125,50,0.2); }
 .verdict-card.watch { background: var(--amber-light); border: 1px solid rgba(230,81,0,0.2); }
@@ -78,28 +85,57 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .verdict-card.avoid h3 { color: var(--red); }
 .verdict-text p { font-size: 12px; color: var(--text-sub); margin-top: 3px; line-height: 1.5; }
 
-.indicators-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
+/* 指標格 */
+.indicators-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
 .ind-card { background: var(--card); border-radius: var(--radius-sm); border: 0.5px solid var(--border); padding: 12px; }
 .ind-label { font-size: 11px; color: var(--text-hint); margin-bottom: 4px; }
-.ind-value { font-size: 20px; font-weight: 700; color: var(--text); }
+.ind-value { font-size: 18px; font-weight: 700; }
+.ind-value.up { color: var(--red); }
+.ind-value.dn { color: var(--green); }
 .ind-signal { font-size: 11px; margin-top: 3px; font-weight: 500; }
 .ind-signal.up { color: var(--red); }
 .ind-signal.dn { color: var(--green); }
 .ind-signal.warn { color: var(--amber); }
 .ind-signal.neu { color: var(--text-hint); }
 
-.history-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 14px; margin-bottom: 10px; }
-.history-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; color: var(--text-sub); }
+/* 區塊卡片 */
+.block-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 14px; margin-bottom: 10px; }
+.block-title { font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+/* 三大法人 */
+.chip-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+.chip-row:last-child { border-bottom: none; }
+.chip-name { font-size: 13px; color: var(--text); }
+.chip-buy { font-size: 12px; color: var(--red); }
+.chip-sell { font-size: 12px; color: var(--green); }
+.chip-net { font-size: 14px; font-weight: 600; }
+.chip-net.up { color: var(--red); }
+.chip-net.dn { color: var(--green); }
+.chip-net.neu { color: var(--text-hint); }
+
+/* 融資融券 */
+.margin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.margin-item { background: var(--gray); border-radius: var(--radius-sm); padding: 10px 12px; }
+.margin-label { font-size: 11px; color: var(--text-hint); margin-bottom: 3px; }
+.margin-val { font-size: 16px; font-weight: 600; }
+.margin-val.up { color: var(--red); }
+.margin-val.dn { color: var(--green); }
+.margin-change { font-size: 11px; margin-top: 2px; }
+.margin-change.up { color: var(--red); }
+.margin-change.dn { color: var(--green); }
+
+/* 走勢 */
 .history-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
 .history-row:last-child { border-bottom: none; }
-.history-date { color: var(--text-hint); }
+.history-date { color: var(--text-hint); font-size: 12px; }
 .history-price { font-weight: 500; }
 .history-chg.up { color: var(--red); }
 .history-chg.dn { color: var(--green); }
 
+/* 狀態 */
 .state-box { text-align: center; padding: 50px 20px; color: var(--text-hint); }
 .state-box.err { color: var(--red); }
-.state-box p { font-size: 14px; line-height: 1.7; }
+.state-box p { font-size: 14px; line-height: 1.7; white-space: pre-line; }
 .spinner { width: 36px; height: 36px; border: 3px solid var(--border-md); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -126,7 +162,7 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
       onkeydown="if(event.key==='Enter') queryStock()" />
     <button class="search-btn" onclick="queryStock()">查詢</button>
   </div>
-  <div class="search-hint">輸入4位數股票代碼，按查詢即可分析</div>
+  <div class="search-hint">輸入股票代碼，按查詢即可分析技術面＋籌碼面</div>
 </div>
 
 <div class="watchlist-section">
@@ -149,6 +185,7 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 let currentToken = '';
 let watchlist = JSON.parse(localStorage.getItem('gomy_watchlist') || '[]');
 let currentStockId = '';
+let stockInfoCache = null;
 
 window.onload = function() {
   const saved = localStorage.getItem('finmind_token');
@@ -161,6 +198,7 @@ function saveToken() {
   if (!t || t.length < 20) { setStatus('❌ Token 格式不正確', 'err'); return; }
   localStorage.setItem('finmind_token', t);
   currentToken = t;
+  stockInfoCache = null;
   setStatus('✅ Token 已儲存', 'ok');
 }
 
@@ -170,6 +208,9 @@ function setStatus(msg, cls) {
   el.className = 'token-status' + (cls ? ' ' + cls : '');
 }
 
+// ============================
+// 自選股
+// ============================
 function renderWatchlist() {
   const el = document.getElementById('watchlist-chips');
   if (!watchlist.length) { el.innerHTML = '<div class="watchlist-empty">尚無自選股，查詢後按「加入自選股」</div>'; return; }
@@ -224,35 +265,72 @@ function toggleWatch(id, name) {
   }
 }
 
+// ============================
+// 主查詢
+// ============================
 async function queryStock() {
-  const id = document.getElementById('stock-input').value.trim().replace(/\D/g,'');
-  if (!id) { showState('請輸入股票代碼', false, false); return; }
-  if (!currentToken) { showState('請先設定 FinMind Token', false, true); return; }
+  const id = document.getElementById('stock-input').value.trim().replace(/\D/g, '');
+  if (!id) { showState('請輸入股票代碼'); return; }
+  if (!currentToken) { showState('請先設定 FinMind Token', true); return; }
 
   showLoading('正在查詢 ' + id + ' 的資料...');
   currentStockId = id;
 
   try {
     const endDate = getTaiwanDate();
-    const startDate = getDateBefore(endDate, 20);
-    const data = await fetchStockData(id, startDate, endDate);
-    if (!data || data.length === 0) { showState('找不到股票代碼「' + id + '」\n請確認代碼是否正確', false, true); return; }
-    renderResult(id, data);
+    const startDate = getDateBefore(endDate, 30);
+    const chipStart = getDateBefore(endDate, 10);
+
+    // 同時查詢：股價、三大法人、融資融券、股票資訊
+    const [priceRes, chipRes, marginRes, infoRes] = await Promise.all([
+      fetchAPI('price', id, startDate, endDate),
+      fetchAPI('chip', id, chipStart, endDate),
+      fetchAPI('margin', id, chipStart, endDate),
+      fetchStockInfo(id)
+    ]);
+
+    if (!priceRes || priceRes.length === 0) {
+      showState('找不到股票代碼「' + id + '」\n請確認代碼是否正確', true);
+      return;
+    }
+
+    renderResult(id, priceRes, chipRes || [], marginRes || [], infoRes);
+
   } catch(e) {
-    showState('查詢失敗：' + e.message, false, true);
+    showState('查詢失敗：' + e.message, true);
   }
 }
 
-async function fetchStockData(id, start, end) {
-  const params = new URLSearchParams({ stock_id: id, start_date: start, end_date: end, token: currentToken });
+async function fetchAPI(type, stock_id, start_date, end_date) {
+  const params = new URLSearchParams({ type, stock_id, start_date, end_date, token: currentToken });
   const res = await fetch('/api/stock?' + params.toString());
-  if (!res.ok) throw new Error('伺服器錯誤 ' + res.status);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const json = await res.json();
   if (json.error) throw new Error(json.error);
   if (json.msg && json.msg !== 'success') throw new Error(json.msg);
   return json.data || [];
 }
 
+async function fetchStockInfo(stock_id) {
+  // 用快取避免重複查詢
+  if (stockInfoCache) {
+    return stockInfoCache.find(s => s.stock_id === stock_id) || null;
+  }
+  try {
+    const params = new URLSearchParams({ type: 'info', stock_id, start_date: '2020-01-01', end_date: '2020-01-01', token: currentToken });
+    const res = await fetch('/api/stock?' + params.toString());
+    const json = await res.json();
+    if (json.data) {
+      stockInfoCache = json.data;
+      return json.data.find(s => s.stock_id === stock_id) || null;
+    }
+  } catch(e) { return null; }
+  return null;
+}
+
+// ============================
+// 技術分析
+// ============================
 function getChangePct(s) {
   const close = parseFloat(s.close);
   const spread = parseFloat(s.spread);
@@ -288,21 +366,28 @@ function calcMA(closes, period) {
   return Math.round(closes.slice(-period).reduce((a,b) => a+b, 0) / period * 100) / 100;
 }
 
-function renderResult(id, data) {
-  const sorted = data.sort((a,b) => a.date.localeCompare(b.date));
+// ============================
+// 渲染結果
+// ============================
+function renderResult(id, priceData, chipData, marginData, stockInfo) {
+  const sorted = priceData.sort((a,b) => a.date.localeCompare(b.date));
   const latest = sorted[sorted.length-1];
   const closes = sorted.map(d => parseFloat(d.close));
   const spread = parseFloat(latest.spread);
   const isUp = spread >= 0;
   const pct = getChangePct(latest);
   const close = parseFloat(latest.close);
-  const name = latest.stock_name || '';
+  const name = stockInfo ? stockInfo.stock_name : (latest.stock_name || '');
+  const industry = stockInfo ? stockInfo.industry_category : '';
 
+  // 技術指標
   const rsi = calcRSI(closes, Math.min(14, closes.length-1));
   const kd = calcKD(sorted, Math.min(9, sorted.length));
   const ma5 = calcMA(closes, Math.min(5, closes.length));
   const ma10 = calcMA(closes, Math.min(10, closes.length));
+  const ma20 = calcMA(closes, Math.min(20, closes.length));
 
+  // 判斷買進分數
   let buyScore = 0, signals = [];
   if (rsi !== null) {
     if (rsi < 30) { buyScore += 2; signals.push('RSI超賣，有反彈機會'); }
@@ -311,28 +396,58 @@ function renderResult(id, data) {
   }
   if (kd.k !== null) {
     if (kd.k < 20) { buyScore += 2; signals.push('KD低檔，等待黃金交叉'); }
-    else if (kd.k > kd.d && kd.k < 80) { buyScore += 1; signals.push('KD黃金交叉，偏多'); }
+    else if (kd.k > kd.d && kd.k < 80) { buyScore += 1; signals.push('KD黃金交叉偏多'); }
     else if (kd.k > 80) { buyScore -= 1; signals.push('KD高檔，留意風險'); }
   }
   if (ma5 && ma10) {
     if (close > ma5 && close > ma10) { buyScore += 1; signals.push('站上均線'); }
-    else if (close < ma5 && close < ma10) { buyScore -= 1; signals.push('跌破均線，偏空'); }
+    else if (close < ma5 && close < ma10) { buyScore -= 1; signals.push('跌破均線'); }
   }
-  if (close > parseFloat(latest.open)) { buyScore += 1; signals.push('收紅K，買方積極'); }
+  if (close > parseFloat(latest.open)) { buyScore += 1; signals.push('收紅K'); }
   if (pct >= 3) { buyScore += 1; signals.push('今日強勢大漲'); }
   else if (pct <= -3) { buyScore -= 1; signals.push('今日跌幅偏大'); }
 
+  // 三大法人
+  const latestChipDate = chipData.length ? chipData.reduce((a,b) => a.date > b.date ? a : b).date : null;
+  const latestChip = latestChipDate ? chipData.filter(d => d.date === latestChipDate) : [];
+  const foreign = latestChip.find(d => d.name === '外陸資買賣超股數(不含外資自營商)') ||
+                  latestChip.find(d => d.name && d.name.includes('外'));
+  const invest = latestChip.find(d => d.name === '投信買賣超股數') ||
+                 latestChip.find(d => d.name && d.name.includes('投信'));
+  const dealer = latestChip.find(d => d.name === '自營商買賣超股數') ||
+                 latestChip.find(d => d.name && d.name.includes('自營'));
+
+  function chipNet(item) {
+    if (!item) return 0;
+    return (parseInt(item.buy) || 0) - (parseInt(item.sell) || 0);
+  }
+  const foreignNet = chipNet(foreign);
+  const investNet = chipNet(invest);
+  const dealerNet = chipNet(dealer);
+  const totalNet = foreignNet + investNet + dealerNet;
+
+  // 加入三大法人籌碼評分
+  if (foreignNet > 0) { buyScore += 1; signals.push('外資買超'); }
+  else if (foreignNet < 0) { buyScore -= 1; signals.push('外資賣超'); }
+
+  // 融資融券
+  const latestMargin = marginData.length ? marginData.sort((a,b) => a.date.localeCompare(b.date)).slice(-1)[0] : null;
+
   let verdict, verdictClass, verdictIcon, verdictDesc;
-  if (buyScore >= 3) { verdict = '建議買進'; verdictClass = 'buy'; verdictIcon = '✅'; verdictDesc = (signals.slice(0,2).join('，')) + '，技術面偏多。'; }
-  else if (buyScore >= 1) { verdict = '可以觀察'; verdictClass = 'watch'; verdictIcon = '👀'; verdictDesc = '訊號不夠強烈，' + (signals[0]||'建議等待更明確訊號') + '。'; }
-  else { verdict = '暫時觀望'; verdictClass = 'avoid'; verdictIcon = '⏸️'; verdictDesc = (signals[0]||'技術面偏弱') + '，不建議現在追買。'; }
+  if (buyScore >= 3) { verdict = '建議買進'; verdictClass = 'buy'; verdictIcon = '✅'; verdictDesc = signals.slice(0,3).join('、') + '，技術面偏多。'; }
+  else if (buyScore >= 1) { verdict = '可以觀察'; verdictClass = 'watch'; verdictIcon = '👀'; verdictDesc = signals.slice(0,2).join('、') + '，訊號不夠強烈，建議等待。'; }
+  else { verdict = '暫時觀望'; verdictClass = 'avoid'; verdictIcon = '⏸️'; verdictDesc = (signals[0] || '技術面偏弱') + '，不建議現在追買。'; }
 
   const inWatch = isInWatchlist(id);
 
   let html = `
+    <!-- 股票基本資訊 -->
     <div class="stock-header-card">
       <div class="stock-title-row">
-        <div><div class="stock-id">${id} ${name}</div><div class="stock-name-tag">${latest.date} · 台灣股市</div></div>
+        <div>
+          <div class="stock-id">${id}${name ? ' ' + name : ''}</div>
+          <div class="stock-meta">${industry ? industry + ' · ' : ''}${latest.date} · 台灣股市</div>
+        </div>
         <button class="add-btn ${inWatch?'added':''}" id="add-btn-${id}" onclick="toggleWatch('${id}','${name}')">
           ${inWatch ? '✅ 已加入' : '⭐ 加入自選'}
         </button>
@@ -341,23 +456,99 @@ function renderResult(id, data) {
         <div class="big-price ${isUp?'up':'dn'}">${close.toFixed(2)}</div>
         <div class="price-change ${isUp?'up':'dn'}">${isUp?'+':''}${spread.toFixed(2)} (${isUp?'+':''}${pct.toFixed(2)}%)</div>
       </div>
-      <div class="price-meta">開 ${parseFloat(latest.open).toFixed(2)} ・ 高 ${parseFloat(latest.max).toFixed(2)} ・ 低 ${parseFloat(latest.min).toFixed(2)} ・ 量 ${fmtVol(latest.Trading_Volume)}</div>
+      <div class="price-detail">開 ${parseFloat(latest.open).toFixed(2)} ・ 高 ${parseFloat(latest.max).toFixed(2)} ・ 低 ${parseFloat(latest.min).toFixed(2)} ・ 量 ${fmtVol(latest.Trading_Volume)}</div>
     </div>
 
+    <!-- 判斷結論 -->
     <div class="verdict-card ${verdictClass}">
       <div class="verdict-icon">${verdictIcon}</div>
       <div class="verdict-text"><h3>${verdict}</h3><p>${verdictDesc}</p></div>
     </div>
 
+    <!-- 技術指標 -->
     <div class="indicators-grid">
-      ${renderInd('RSI(14)', rsi!==null?rsi.toFixed(1):'--', rsi===null?'neu':rsi<30?'dn':rsi>70?'up':'neu', rsi===null?'資料不足':rsi<30?'超賣區 ✅':rsi>70?'超買區 ⚠️':'正常區間')}
-      ${renderInd('KD 值', kd.k!==null?`K:${kd.k} D:${kd.d}`:'--', kd.k===null?'neu':kd.k<20?'dn':kd.k>80?'up':'neu', kd.k===null?'資料不足':kd.k<20?'低檔區 ✅':kd.k>80?'高檔區 ⚠️':kd.k>kd.d?'K>D 偏多':'K<D 偏空')}
-      ${renderInd('5日均線', ma5?ma5.toFixed(2):'--', !ma5?'neu':close>ma5?'up':'dn', !ma5?'資料不足':close>ma5?'站上均線 ✅':'跌破均線 ⚠️')}
-      ${renderInd('10日均線', ma10?ma10.toFixed(2):'--', !ma10?'neu':close>ma10?'up':'dn', !ma10?'資料不足':close>ma10?'站上均線 ✅':'跌破均線 ⚠️')}
+      ${renderInd('RSI(14)', rsi!==null?rsi.toFixed(1):'--',
+        rsi===null?'neu':rsi<30?'dn':rsi>70?'up':'neu',
+        rsi===null?'資料不足':rsi<30?'超賣區 ✅':rsi>70?'超買區 ⚠️':'正常區間')}
+      ${renderInd('KD 值', kd.k!==null?'K:'+kd.k+' D:'+kd.d:'--',
+        kd.k===null?'neu':kd.k<20?'dn':kd.k>80?'up':'neu',
+        kd.k===null?'資料不足':kd.k<20?'低檔區 ✅':kd.k>80?'高檔區 ⚠️':kd.k>kd.d?'K>D 偏多':'K<D 偏空')}
+      ${renderInd('5日均線', ma5?ma5.toFixed(2):'--',
+        !ma5?'neu':close>ma5?'up':'dn',
+        !ma5?'資料不足':close>ma5?'站上均線 ✅':'跌破均線 ⚠️')}
+      ${renderInd('20日均線', ma20?ma20.toFixed(2):'--',
+        !ma20?'neu':close>ma20?'up':'dn',
+        !ma20?'資料不足':close>ma20?'站上月線 ✅':'跌破月線 ⚠️')}
     </div>
 
-    <div class="history-card">
-      <div class="history-title">近期走勢（最近 ${Math.min(7,sorted.length)} 天）</div>
+    <!-- 三大法人 -->
+    <div class="block-card">
+      <div class="block-title">🏦 三大法人買賣超${latestChipDate?' ('+latestChipDate+')':''}</div>
+      ${latestChip.length === 0 ? '<div style="font-size:13px;color:var(--text-hint)">暫無資料</div>' : `
+      <div class="chip-row">
+        <div>
+          <div class="chip-name">外資</div>
+          <div style="font-size:11px;color:var(--text-hint)">買${fmtChip(foreign?.buy)} 賣${fmtChip(foreign?.sell)}</div>
+        </div>
+        <div class="chip-net ${foreignNet>0?'up':foreignNet<0?'dn':'neu'}">${foreignNet>0?'+':''}${fmtChip(foreignNet)} 張</div>
+      </div>
+      <div class="chip-row">
+        <div>
+          <div class="chip-name">投信</div>
+          <div style="font-size:11px;color:var(--text-hint)">買${fmtChip(invest?.buy)} 賣${fmtChip(invest?.sell)}</div>
+        </div>
+        <div class="chip-net ${investNet>0?'up':investNet<0?'dn':'neu'}">${investNet>0?'+':''}${fmtChip(investNet)} 張</div>
+      </div>
+      <div class="chip-row">
+        <div>
+          <div class="chip-name">自營商</div>
+          <div style="font-size:11px;color:var(--text-hint)">買${fmtChip(dealer?.buy)} 賣${fmtChip(dealer?.sell)}</div>
+        </div>
+        <div class="chip-net ${dealerNet>0?'up':dealerNet<0?'dn':'neu'}">${dealerNet>0?'+':''}${fmtChip(dealerNet)} 張</div>
+      </div>
+      <div class="chip-row" style="background:var(--gray);border-radius:var(--radius-sm);padding:8px;margin-top:4px">
+        <div class="chip-name" style="font-weight:600">三大法人合計</div>
+        <div class="chip-net ${totalNet>0?'up':totalNet<0?'dn':'neu'}" style="font-size:16px">${totalNet>0?'+':''}${fmtChip(totalNet)} 張</div>
+      </div>`}
+    </div>
+
+    <!-- 融資融券 -->
+    <div class="block-card">
+      <div class="block-title">💳 融資融券${latestMargin?' ('+latestMargin.date+')':''}</div>
+      ${!latestMargin ? '<div style="font-size:13px;color:var(--text-hint)">暫無資料</div>' : `
+      <div class="margin-grid">
+        <div class="margin-item">
+          <div class="margin-label">融資餘額</div>
+          <div class="margin-val">${fmtN(latestMargin.MarginPurchase)} 張</div>
+          <div class="margin-change ${parseInt(latestMargin.MarginPurchaseBuy)>parseInt(latestMargin.MarginPurchaseSell)?'up':'dn'}">
+            今增 ${fmtN(latestMargin.MarginPurchaseBuy)} 減 ${fmtN(latestMargin.MarginPurchaseSell)}
+          </div>
+        </div>
+        <div class="margin-item">
+          <div class="margin-label">融券餘額</div>
+          <div class="margin-val">${fmtN(latestMargin.ShortSale)} 張</div>
+          <div class="margin-change ${parseInt(latestMargin.ShortSaleBuy)>parseInt(latestMargin.ShortSaleSell)?'dn':'up'}">
+            今增 ${fmtN(latestMargin.ShortSaleSell)} 減 ${fmtN(latestMargin.ShortSaleBuy)}
+          </div>
+        </div>
+        <div class="margin-item">
+          <div class="margin-label">券資比</div>
+          <div class="margin-val ${parseFloat(latestMargin.ShortSale)/parseFloat(latestMargin.MarginPurchase||1)>0.3?'up':''}">
+            ${latestMargin.MarginPurchase>0?(parseFloat(latestMargin.ShortSale)/parseFloat(latestMargin.MarginPurchase)*100).toFixed(1)+'%':'--'}
+          </div>
+          <div class="margin-change neu">券資比越低越健康</div>
+        </div>
+        <div class="margin-item">
+          <div class="margin-label">融資使用率</div>
+          <div class="margin-val">${latestMargin.MarginPurchaseLimit>0?(parseFloat(latestMargin.MarginPurchase)/parseFloat(latestMargin.MarginPurchaseLimit)*100).toFixed(1)+'%':'--'}</div>
+          <div class="margin-change neu">上限 ${fmtN(latestMargin.MarginPurchaseLimit)} 張</div>
+        </div>
+      </div>`}
+    </div>
+
+    <!-- 近期走勢 -->
+    <div class="block-card">
+      <div class="block-title">📅 近期走勢（最近 ${Math.min(7,sorted.length)} 天）</div>
       ${sorted.slice(-7).reverse().map(d => {
         const dp = getChangePct(d); const ds = parseFloat(d.spread); const dup = ds >= 0;
         return `<div class="history-row">
@@ -374,7 +565,7 @@ function renderResult(id, data) {
 function renderInd(label, value, cls, signal) {
   return `<div class="ind-card">
     <div class="ind-label">${label}</div>
-    <div class="ind-value" style="font-size:${value.length>6?'15px':'20px'}">${value}</div>
+    <div class="ind-value ${cls}" style="font-size:${value.length>7?'14px':'18px'}">${value}</div>
     <div class="ind-signal ${cls}">${signal}</div>
   </div>`;
 }
@@ -386,10 +577,23 @@ function fmtVol(v) {
   return String(Math.round(n));
 }
 
-function showLoading(msg) {
-  document.getElementById('result-section').innerHTML = `<div class="state-box"><div class="spinner"></div><p>${msg}</p></div>`;
+function fmtChip(v) {
+  const n = parseInt(v) || 0;
+  if (Math.abs(n) >= 1000) return (n/1000).toFixed(0) + 'K';
+  return String(n);
 }
-function showState(msg, loading, isErr) {
+
+function fmtN(v) {
+  const n = parseInt(v) || 0;
+  if (n >= 10000) return (n/1000).toFixed(0) + 'K';
+  return String(n);
+}
+
+function showLoading(msg) {
+  document.getElementById('result-section').innerHTML =
+    `<div class="state-box"><div class="spinner"></div><p>${msg}</p></div>`;
+}
+function showState(msg, isErr) {
   document.getElementById('result-section').innerHTML =
     `<div class="state-box${isErr?' err':''}"><p style="font-size:24px;margin-bottom:10px">${isErr?'⚠️':'💡'}</p><p>${msg}</p></div>`;
 }
