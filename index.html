@@ -108,7 +108,8 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 
 .stock-header-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 10px; }
 .stock-title-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.stock-id { font-size: 18px; font-weight: 700; }
+.stock-id { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.industry-tag { font-size: 11px; font-weight: 500; background: var(--blue-light); color: var(--blue); border-radius: 20px; padding: 2px 8px; white-space: nowrap; }
 .stock-meta { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
 .add-btn { background: var(--blue-light); color: var(--blue); border: none; border-radius: 20px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 .add-btn.added { background: var(--green-light); color: var(--green); }
@@ -668,8 +669,8 @@ function renderResult(id, priceData, chipData, marginData, stockInfo, stockName)
     <div class="stock-header-card">
       <div class="stock-title-row">
         <div>
-          <div class="stock-id">${id}${stockName ? ' ' + stockName : ''}</div>
-          <div class="stock-meta">${industry ? industry + ' · ' : ''}${latest.date} · 台灣股市</div>
+          <div class="stock-id">${id}${stockName ? ' ' + stockName : ''}${industry ? ' <span class="industry-tag">'+industry+'</span>' : ''}</div>
+          <div class="stock-meta">${latest.date} · 台灣股市</div>
         </div>
         <button class="add-btn ${inWatch?'added':''}" id="add-btn-${id}" onclick="toggleWatch('${id}','${stockName}')">
           ${inWatch ? '✅ 已加入' : '⭐ 加入自選'}
