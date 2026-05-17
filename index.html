@@ -114,6 +114,22 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .news-source { background: var(--blue-light); color: var(--blue); border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 500; }
 .news-loading { font-size: 13px; color: var(--text-hint); text-align: center; padding: 16px 0; }
 
+/* 財報分頁 */
+.fin-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border-md); }
+.fin-tab { padding: 8px 14px; font-size: 13px; color: var(--text-hint); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.fin-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+.fin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.fin-table th { text-align: left; color: var(--text-hint); font-weight: 500; padding: 6px 4px; border-bottom: 0.5px solid var(--border-md); }
+.fin-table th:not(:first-child) { text-align: right; }
+.fin-table td { padding: 7px 4px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+.fin-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.fin-table tr:last-child td { border-bottom: none; }
+.fin-item-name { color: var(--text); font-size: 12px; line-height: 1.4; }
+.fin-val { color: var(--text); }
+.fin-val.up { color: var(--red); }
+.fin-val.dn { color: var(--green); }
+.fin-loading { font-size: 13px; color: var(--text-hint); text-align: center; padding: 20px 0; }
+
 .state-box { text-align: center; padding: 50px 20px; color: var(--text-hint); }
 .state-box.err { color: var(--red); }
 .state-box p { font-size: 14px; line-height: 1.7; white-space: pre-line; }
@@ -405,6 +421,7 @@ async function queryStock() {
     const stockName = infoRes ? infoRes.stock_name : (priceRes[0]?.stock_name || '');
     renderResult(id, priceRes, chipRes || [], marginRes || [], infoRes, stockName);
     loadNews(id, stockName);
+    loadFinancial(id, 'financial');
 
   } catch(e) {
     showState('查詢失敗：' + e.message, true);
@@ -649,6 +666,16 @@ function renderResult(id, priceData, chipData, marginData, stockInfo, stockName)
     <div class="block-card">
       <div class="block-title">📰 近日相關新聞</div>
       <div id="news-block"><div class="news-loading">🔍 正在搜尋相關新聞...</div></div>
+    </div>
+
+    <div class="block-card">
+      <div class="block-title">📊 財務報表（近4季）</div>
+      <div class="fin-tabs">
+        <div class="fin-tab active" onclick="switchFinTab('financial',this)">損益表</div>
+        <div class="fin-tab" onclick="switchFinTab('cashflow',this)">現金流量表</div>
+        <div class="fin-tab" onclick="switchFinTab('balance',this)">資產負債表</div>
+      </div>
+      <div id="fin-block"><div class="fin-loading">🔍 正在載入財務資料...</div></div>
     </div>`;
 }
 
@@ -663,6 +690,92 @@ function renderInd(label, value, cls, signal) {
 function fmtVol(v) { const n=parseFloat(v); if(n>=1000000) return (n/1000000).toFixed(1)+'M'; if(n>=1000) return (n/1000).toFixed(0)+'K'; return String(Math.round(n)); }
 function fmtChip(v) { const n=parseInt(v)||0; if(Math.abs(n)>=1000) return (n/1000).toFixed(0)+'K'; return String(n); }
 function fmtN(v) { const n=parseInt(v)||0; if(n>=10000) return (n/1000).toFixed(0)+'K'; return String(n); }
+
+// 財報相關
+let currentStockIdForFin = '';
+let finCache = {};
+
+async function loadFinancial(stock_id, type) {
+  currentStockIdForFin = stock_id;
+  const finEl = document.getElementById('fin-block');
+  if (!finEl) return;
+  finEl.innerHTML = '<div class="fin-loading">⏳ 載入' + {financial:'損益表',cashflow:'現金流量表',balance:'資產負債表'}[type] + '中...</div>';
+
+  // 有快取直接用
+  if (finCache[stock_id + '_' + type]) {
+    renderFinancial(finCache[stock_id + '_' + type], type);
+    return;
+  }
+
+  try {
+    const endDate = getTaiwanDate();
+    const startDate = getDateBefore(endDate, 400); // 約4季
+    const params = new URLSearchParams({ type, stock_id, start_date: startDate, end_date: endDate });
+    const res = await fetch('/api/stock?' + params.toString());
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    const data = json.data || [];
+    finCache[stock_id + '_' + type] = data;
+    renderFinancial(data, type);
+  } catch(e) {
+    finEl.innerHTML = '<div class="fin-loading">載入失敗：' + e.message + '</div>';
+  }
+}
+
+function switchFinTab(type, el) {
+  document.querySelectorAll('.fin-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  loadFinancial(currentStockIdForFin, type);
+}
+
+function renderFinancial(data, type) {
+  const finEl = document.getElementById('fin-block');
+  if (!data || data.length === 0) {
+    finEl.innerHTML = '<div class="fin-loading">暫無財務資料</div>';
+    return;
+  }
+
+  // 取得最近4季的日期
+  const allDates = [...new Set(data.map(d => d.date))].sort().reverse().slice(0, 4);
+  if (allDates.length === 0) { finEl.innerHTML = '<div class="fin-loading">暫無資料</div>'; return; }
+
+  // 取得所有項目
+  const allTypes = [...new Set(data.map(d => d.type))];
+
+  // 建立表格：行=項目，欄=季度
+  let html = '<div style="overflow-x:auto"><table class="fin-table"><thead><tr>';
+  html += '<th style="min-width:120px">項目</th>';
+  allDates.forEach(d => { html += `<th>${d.substring(0,7)}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  allTypes.forEach(typeName => {
+    html += '<tr>';
+    html += `<td class="fin-item-name">${typeName}</td>`;
+    allDates.forEach(d => {
+      const item = data.find(x => x.date === d && x.type === typeName);
+      const val = item ? parseFloat(item.value) : null;
+      if (val === null) {
+        html += '<td class="fin-val">--</td>';
+      } else {
+        const formatted = fmtFinVal(val);
+        const cls = val > 0 ? 'up' : val < 0 ? 'dn' : '';
+        html += `<td class="fin-val ${cls}">${formatted}</td>`;
+      }
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  finEl.innerHTML = html;
+}
+
+function fmtFinVal(v) {
+  const abs = Math.abs(v);
+  const sign = v < 0 ? '-' : '';
+  if (abs >= 100000000) return sign + (abs/100000000).toFixed(2) + '億';
+  if (abs >= 10000) return sign + (abs/10000).toFixed(1) + '萬';
+  return sign + abs.toFixed(2);
+}
 
 function showLoading(msg) {
   document.getElementById('result-section').innerHTML = `<div class="state-box"><div class="spinner"></div><p>${msg}</p></div>`;
