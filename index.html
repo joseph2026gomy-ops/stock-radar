@@ -750,8 +750,8 @@ function renderFinancial(data, type) {
     return;
   }
 
-  // 取得最近4季的日期
-  const allDates = [...new Set(data.map(d => d.date))].sort().reverse().slice(0, 4);
+  // 只取最新一季
+  const allDates = [...new Set(data.map(d => d.date))].sort().reverse().slice(0, 1);
   if (allDates.length === 0) { finEl.innerHTML = '<div class="fin-loading">暫無資料</div>'; return; }
 
   // 取得所有項目
@@ -762,30 +762,21 @@ function renderFinancial(data, type) {
     const y = dateStr.substring(0,4);
     const m = parseInt(dateStr.substring(5,7));
     const q = m <= 3 ? 'Q1' : m <= 6 ? 'Q2' : m <= 9 ? 'Q3' : 'Q4';
-    return y + '<br>' + q;
+    return y + ' ' + q;
   }
 
-  let html = '<table class="fin-table"><thead><tr>';
-  html += '<th style="width:45%">項目</th>';
-  allDates.forEach(d => { html += `<th style="width:${55/allDates.length}%">${fmtQuarter(d)}</th>`; });
-  html += '</tr></thead><tbody>';
+  const latestDate = allDates[0];
+  let html = `<div style="font-size:12px;color:var(--text-hint);margin-bottom:10px">最新季度：${fmtQuarter(latestDate)}</div>`;
+  html += '<table class="fin-table"><thead><tr><th style="width:70%">項目</th><th style="width:30%">數值</th></tr></thead><tbody>';
 
   allTypes.forEach(typeName => {
     const chName = translateFinName(typeName);
-    html += '<tr>';
-    html += `<td class="fin-item-name">${chName}</td>`;
-    allDates.forEach(d => {
-      const item = data.find(x => x.date === d && x.type === typeName);
-      const val = item ? parseFloat(item.value) : null;
-      if (val === null) {
-        html += '<td class="fin-val">--</td>';
-      } else {
-        const formatted = fmtFinVal(val);
-        const cls = val > 0 ? 'up' : val < 0 ? 'dn' : '';
-        html += `<td class="fin-val ${cls}">${formatted}</td>`;
-      }
-    });
-    html += '</tr>';
+    const item = data.find(x => x.date === latestDate && x.type === typeName);
+    const val = item ? parseFloat(item.value) : null;
+    if (val === null) return; // 最新季沒資料就跳過
+    const formatted = fmtFinVal(val);
+    const cls = val > 0 ? 'up' : val < 0 ? 'dn' : '';
+    html += `<tr><td class="fin-item-name">${chName}</td><td class="fin-val ${cls}">${formatted}</td></tr>`;
   });
 
   html += '</tbody></table>';
@@ -932,6 +923,44 @@ const FIN_NAMES = {
   'Equity': '股東權益合計',
   'Equity_per': '每股淨值(元)',
   'NumberOfSharesInEntityHeldByEntityAndByItsSubsidiaries': '庫藏股股數',
+  // 應付帳款相關
+  'AccountsPayable_per': '應付帳款(每股)',
+  'AccountsPayableToRelatedParties': '關聯方應付帳款',
+  'AccountsPayableToRelatedParties_per': '關聯方應付帳款(每股)',
+  'OtherPayables': '其他應付款',
+  'OtherPayables_per': '其他應付款(每股)',
+  'CurrentTaxLiabilities': '本期所得稅負債',
+  'CurrentTaxLiabilities_per': '本期所得稅負債(每股)',
+  'OtherCurrentLiabilities': '其他流動負債',
+  'OtherCurrentLiabilities2per': '其他流動負債(每股)',
+  'CurrentLiabilities_per': '流動負債佔比(%)',
+  // 非流動負債
+  'BondsPayable': '應付公司債',
+  'BondsPayable_per': '應付公司債(每股)',
+  'LongtermBorrowings': '長期借款',
+  'LongtermBorrowings_per': '長期借款(每股)',
+  'LongtermBorrowings2_per': '長期借款2(每股)',
+  'OtherNoncurrentLiabilities': '其他非流動負債',
+  'OtherNoncurrentLiabilities_per': '其他非流動負債(每股)',
+  'NoncurrentLiabilities': '非流動負債合計',
+  'NoncurrentLiabilities1_per': '非流動負債佔比(%)',
+  'Liabilities': '負債合計',
+  'Liabilities_per': '負債佔比(%)',
+  // 股本相關
+  'OrdinaryShare': '普通股股本',
+  'OrdinaryShare_per': '普通股股本(每股)',
+  'CapitalStock': '股本合計',
+  'CapitalStock_per': '股本合計(每股)',
+  'CapitalSurplusAdditionalPaidInCapital': '資本公積-額外繳入資本',
+  'CapitalSurplusAdditionalPaidInCapital_per': '資本公積-額外繳入資本(每股)',
+  'CapitalSurplusDonatedAssetsReceived': '資本公積-受贈資產',
+  'CapitalSurplusDonatedAssetsReceived_per': '資本公積-受贈資產(每股)',
+  'CapitalSurplusChangesInEquityOfAssociatesAndJointVenturesAccountedForUsingEquityMethod': '資本公積-採權益法認列關聯企業股權變動',
+  'CapitalSurplusChangesInEquityOfAssociatesAndJointVenturesAccountedForUsingEquityMethod_per': '資本公積-採權益法認列關聯企業股權變動(每股)',
+  'CapitalSurplusNetAssetsFromMerger': '資本公積-合併溢價',
+  'CapitalSurplusNetAssetsFromMerger_per': '資本公積-合併溢價(每股)',
+  'CapitalSurplus': '資本公積合計',
+  'CapitalSurplus_per': '資本公積合計(每股)',
 };
 
 function translateFinName(name) {
