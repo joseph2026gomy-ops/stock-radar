@@ -157,6 +157,64 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 }
 .donate-copy-btn:active { background: #15803D; }
 
+/* 贊助彈窗 */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: 88%;
+  max-width: 360px;
+  text-align: center;
+}
+.modal-title { font-size: 18px; font-weight: 700; color: #16A34A; margin-bottom: 16px; }
+.modal-body p { font-size: 14px; color: var(--text-sub); line-height: 1.6; }
+.modal-account {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--gray);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin: 12px 0;
+  letter-spacing: 2px;
+}
+.modal-hint { font-size: 13px; color: var(--text-hint); margin-top: 8px; line-height: 1.6; }
+.modal-hint strong { color: #16A34A; }
+.modal-copy-btn {
+  width: 100%;
+  background: #16A34A;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+.modal-copy-btn:active { background: #15803D; }
+.modal-close-btn {
+  width: 100%;
+  background: none;
+  color: var(--text-hint);
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
 .bottom-note {
   position: fixed;
   bottom: 0;
@@ -207,9 +265,21 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 <!-- 贊助列 -->
 <div class="donate-bar">
   <span class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</span>
-  <a class="donate-copy-btn" href="https://line.me/ti/p/~neiltang" target="_blank" rel="noopener">
-    💚 小額贊助
-  </a>
+  <button class="donate-copy-btn" onclick="showDonateModal()">💚 小額贊助</button>
+</div>
+
+<!-- 贊助彈窗 -->
+<div class="modal-overlay" id="donate-modal" onclick="hideDonateModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">💚 感謝您的支持！</div>
+    <div class="modal-body">
+      <p>請在 <strong>LINE Pay</strong> 輸入以下帳號轉帳：</p>
+      <div class="modal-account">993927278809</div>
+      <p class="modal-hint">或搜尋 LINE ID：<strong>neiltang</strong><br>加好友後直接轉帳</p>
+    </div>
+    <button class="modal-copy-btn" id="modal-copy-btn" onclick="copyDonateAccount()">📋 複製帳號</button>
+    <button class="modal-close-btn" onclick="hideDonateModal()">關閉</button>
+  </div>
 </div>
 
 <div class="bottom-note">資料來源：FinMind + Google News｜<strong>GoMy 選股雷達</strong></div>
@@ -219,6 +289,31 @@ let watchlist = JSON.parse(localStorage.getItem('gomy_watchlist') || '[]');
 let stockInfoCache = null;
 
 window.onload = function() { renderWatchlist(); };
+
+function showDonateModal() {
+  document.getElementById('donate-modal').classList.add('show');
+}
+function hideDonateModal() {
+  document.getElementById('donate-modal').classList.remove('show');
+}
+function copyDonateAccount() {
+  const btn = document.getElementById('modal-copy-btn');
+  const copy = () => {
+    btn.textContent = '✅ 已複製！';
+    setTimeout(() => { btn.textContent = '📋 複製帳號'; }, 2000);
+  };
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText('993927278809').then(copy);
+  } else {
+    const el = document.createElement('textarea');
+    el.value = '993927278809';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    copy();
+  }
+}
 
 function copyAccount() {
   const btn = document.getElementById('copy-btn');
