@@ -42,7 +42,7 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .chip .del:hover { color: var(--red); }
 .watchlist-empty { font-size: 13px; color: var(--text-hint); }
 
-.result-section { padding: 0 16px 100px; }
+.result-section { padding: 0 16px 120px; }
 
 .stock-header-card { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); padding: 16px; margin-bottom: 10px; }
 .stock-title-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
@@ -120,7 +120,53 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .spinner { width: 36px; height: 36px; border: 3px solid var(--border-md); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.bottom-note { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--card); border-top: 0.5px solid var(--border-md); padding: 10px 16px 20px; text-align: center; font-size: 11px; color: var(--text-hint); }
+/* 贊助按鈕 */
+.donate-bar {
+  position: fixed;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: #FFFDE7;
+  border-top: 1px solid #FDD835;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+}
+.donate-text { font-size: 13px; color: #E65100; }
+.donate-btn {
+  background: #0070BA;
+  color: #fff;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+}
+.donate-btn:active { background: #005EA6; }
+
+.bottom-note {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--card);
+  border-top: 0.5px solid var(--border-md);
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-hint);
+}
 .bottom-note strong { color: var(--blue); }
 </style>
 </head>
@@ -152,6 +198,14 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 
 <div class="result-section" id="result-section">
   <div class="state-box"><p>請輸入股票代碼開始分析</p></div>
+</div>
+
+<!-- 贊助按鈕 -->
+<div class="donate-bar">
+  <span class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</span>
+  <a class="donate-btn" href="https://paypal.me/stwog365" target="_blank" rel="noopener">
+    💙 小額贊助
+  </a>
 </div>
 
 <div class="bottom-note">資料來源：FinMind + Google News｜<strong>GoMy 選股雷達</strong></div>
@@ -213,9 +267,7 @@ function toggleWatch(id, name) {
 async function queryStock() {
   const id = document.getElementById('stock-input').value.trim().replace(/\D/g, '');
   if (!id) { showState('請輸入股票代碼'); return; }
-
   showLoading('正在查詢 ' + id + ' 的資料...');
-
   try {
     const endDate = getTaiwanDate();
     const startDate = getDateBefore(endDate, 30);
