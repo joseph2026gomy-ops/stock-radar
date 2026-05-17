@@ -49,6 +49,12 @@ export default async function handler(req, res) {
       url = `${BASE}?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=${stock_id}&start_date=${start_date}&end_date=${end_date}`;
     } else if (type === 'margin') {
       url = `${BASE}?dataset=TaiwanStockMarginPurchaseShortSale&data_id=${stock_id}&start_date=${start_date}&end_date=${end_date}`;
+    } else if (type === 'financial') {
+      url = `${BASE}?dataset=TaiwanStockFinancialStatements&data_id=${stock_id}&start_date=${start_date}&end_date=${end_date}`;
+    } else if (type === 'balance') {
+      url = `${BASE}?dataset=TaiwanStockBalanceSheet&data_id=${stock_id}&start_date=${start_date}&end_date=${end_date}`;
+    } else if (type === 'cashflow') {
+      url = `${BASE}?dataset=TaiwanStockCashFlowsStatement&data_id=${stock_id}&start_date=${start_date}&end_date=${end_date}`;
     } else {
       res.status(400).json({ error: '不支援的查詢類型' }); return;
     }
