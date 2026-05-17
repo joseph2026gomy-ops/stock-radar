@@ -137,21 +137,22 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
   gap: 10px;
   z-index: 99;
 }
-.donate-info { flex: 1; min-width: 0; }
-.donate-text { font-size: 12px; color: #166534; font-weight: 500; }
-.donate-account { font-size: 12px; color: #333; margin-top: 2px; }
-.donate-account strong { color: #15803D; letter-spacing: 0.5px; }
+.donate-text { font-size: 13px; color: #166534; font-weight: 500; }
 .donate-copy-btn {
   background: #16A34A;
   color: #fff;
   border: none;
   border-radius: 20px;
-  padding: 7px 14px;
-  font-size: 12px;
+  padding: 8px 16px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   transition: background 0.2s;
 }
 .donate-copy-btn:active { background: #15803D; }
@@ -205,11 +206,10 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 
 <!-- 贊助列 -->
 <div class="donate-bar">
-  <div class="donate-info">
-    <div class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</div>
-    <div class="donate-account">💚 LINE Pay 轉帳：<strong>993927278809</strong></div>
-  </div>
-  <button class="donate-copy-btn" id="copy-btn" onclick="copyAccount()">複製帳號</button>
+  <span class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</span>
+  <a class="donate-copy-btn" href="https://line.me/ti/p/~neiltang" target="_blank" rel="noopener">
+    💚 小額贊助
+  </a>
 </div>
 
 <div class="bottom-note">資料來源：FinMind + Google News｜<strong>GoMy 選股雷達</strong></div>
