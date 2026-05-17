@@ -120,38 +120,41 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
 .spinner { width: 36px; height: 36px; border: 3px solid var(--border-md); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* 贊助按鈕 */
+/* 贊助列 */
 .donate-bar {
   position: fixed;
-  bottom: 44px;
+  bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: 480px;
-  background: #FFFDE7;
-  border-top: 1px solid #FDD835;
-  padding: 8px 16px;
+  background: #F0FFF4;
+  border-top: 1px solid #86EFAC;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   z-index: 99;
 }
-.donate-text { font-size: 13px; color: #E65100; }
-.donate-btn {
-  background: #0070BA;
+.donate-info { flex: 1; min-width: 0; }
+.donate-text { font-size: 12px; color: #166534; font-weight: 500; }
+.donate-account { font-size: 12px; color: #333; margin-top: 2px; }
+.donate-account strong { color: #15803D; letter-spacing: 0.5px; }
+.donate-copy-btn {
+  background: #16A34A;
   color: #fff;
+  border: none;
   border-radius: 20px;
-  padding: 7px 16px;
+  padding: 7px 14px;
   font-size: 12px;
   font-weight: 600;
-  text-decoration: none;
+  cursor: pointer;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  flex-shrink: 0;
   transition: background 0.2s;
 }
-.donate-btn:active { background: #005EA6; }
+.donate-copy-btn:active { background: #15803D; }
 
 .bottom-note {
   position: fixed;
@@ -162,7 +165,7 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
   max-width: 480px;
   background: var(--card);
   border-top: 0.5px solid var(--border-md);
-  padding: 8px 16px;
+  padding: 6px 16px;
   text-align: center;
   font-size: 11px;
   color: var(--text-hint);
@@ -200,12 +203,13 @@ body { font-family: -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-ser
   <div class="state-box"><p>請輸入股票代碼開始分析</p></div>
 </div>
 
-<!-- 贊助按鈕 -->
+<!-- 贊助列 -->
 <div class="donate-bar">
-  <span class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</span>
-  <a class="donate-btn" href="https://paypal.me/stwog365" target="_blank" rel="noopener">
-    💙 小額贊助
-  </a>
+  <div class="donate-info">
+    <div class="donate-text">☕ 覺得好用嗎？請我們喝杯咖啡！</div>
+    <div class="donate-account">💚 LINE Pay 轉帳：<strong>993927278809</strong></div>
+  </div>
+  <button class="donate-copy-btn" id="copy-btn" onclick="copyAccount()">複製帳號</button>
 </div>
 
 <div class="bottom-note">資料來源：FinMind + Google News｜<strong>GoMy 選股雷達</strong></div>
@@ -215,6 +219,25 @@ let watchlist = JSON.parse(localStorage.getItem('gomy_watchlist') || '[]');
 let stockInfoCache = null;
 
 window.onload = function() { renderWatchlist(); };
+
+function copyAccount() {
+  const btn = document.getElementById('copy-btn');
+  navigator.clipboard.writeText('993927278809').then(function() {
+    btn.textContent = '✅ 已複製！';
+    btn.style.background = '#15803D';
+    setTimeout(() => { btn.textContent = '複製帳號'; btn.style.background = ''; }, 2000);
+  }).catch(function() {
+    // 備用方案（舊版瀏覽器）
+    const el = document.createElement('textarea');
+    el.value = '993927278809';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    btn.textContent = '✅ 已複製！';
+    setTimeout(() => { btn.textContent = '複製帳號'; }, 2000);
+  });
+}
 
 function renderWatchlist() {
   const el = document.getElementById('watchlist-chips');
